@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bcm.mapper.EmpMapper">
+<!--
+   若字段名和实体类中的属性名不一致，但是字段名符合数据库的规则（使用_），实体类中的属性名符合Java的规则（使用驼峰）
+   此时也可通过以下两种方式处理字段名和实体类中的属性的映射关系
+    a>可以通过为字段起别名的方式，保证和实体类中的属性名保持一致
+    b>可以在MyBatis的核心配置文件中设置一个全局配置信息mapUnderscoreToCamelCase，可以在查询表中数据时，自动将_类型的字段名转换为驼峰
+    例如：字段名user_name，设置了mapUnderscoreToCamelCase，此时字段名就会转换为userName
+
+    3.使用ResultMap自定义映射处理
+        处理多对一关系
+        1，级联方式处理
+        2,association
+        3分步查询
+        处理一对多关系
+        1.collection
+        2.分步查询
+
+-->
+
+<!--
+                resultMap :设置自定义的映射关系
+                id：唯一标识
+                type；处理映射关系的实体类的类型
+                常用标签
+                id:处理主键与实体类属性的映射关系
+                result:处理普通字段与实体类属性的映射关系
+                association:处理多对一属性（处理实体类属性）
+                column:SQL语句字段名
+                propert:实体类属性名
+
+-->
+
+
+    <resultMap id="empResultMap" type="Emp">
+    <id column="emp_id" property="emPid"></id>
+    <result column="emp_name" property="empName"></result>
+    <result column="age" property="age"></result>
+    <result column="gender" property="gender"></result>
+    </resultMap>
+
+    <select id="getEmpById" resultMap="empResultMap">
+    select * from  tb_emp where emp_id = #{empid}
+    </select>
+
+
+<!--     Emp getEmpById(Integer empid);
+   -->
+    <select id="getEmpByIdOld" resultType="Emp">
+        select * from  tb_emp where emp_id = #{empid}
+    </select>
+                    <!--  级联方式处理  -->
+    <resultMap id="empDeptResultMapOne" type="Emp">
+        <id column="emp_id" property="emPid"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <result column="dept_id" property="dept.deptId"></result>
+        <result column="dept_name" property="dept.deptName"></result>
+    </resultMap>
+
+    <resultMap id="empDeptResultMap" type="Emp">
+        <id column="emp_id" property="emPid"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <association property="dept" javaType="Dept">
+            <id column="dept_id" property="deptId"></id>
+            <result column="dept_name" property="deptName"></result>
+        </association>
+    </resultMap>
+    
+<!--        Emp getEmpDeptById(@Param("emPid") Integer emPid);
+-->
+    <select id="getEmpDeptById" resultMap="empDeptResultMap">
+        SELECT * FROM
+        tb_emp LEFT JOIN tb_dept
+        ON tb_emp.dept_id = tb_dept.dept_id
+        WHERE tb_emp.emp_id = #{emPid}
+    </select>
+
+    <resultMap id="empAndDeptResultMap" type="Emp">
+        <id column="emp_id" property="emPid"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+<!--        fetchType 是否使用延迟加载-->
+        <association property="dept" fetchType="eager"
+                     select="com.bcm.mapper.DeptMapper.getEmpAndDept"
+                     column="dept_id">
+        </association>
+    </resultMap>
+
+    <!--      Emp getEmpAndDept(@Param("empId") Integer empId);-->
+    <select id="getEmpAndDept" resultMap="empAndDeptResultMap">
+            select * from tb_emp where emp_id = #{empId}
+    </select>
+<!--    List<Emp> getAllEmps(@Param("deptId") Integer deptId);-->
+    <select id="getAllEmps" resultType="Emp">
+        select * from tb_emp where dept_id = #{deptId}
+    </select>
+
+</mapper>
