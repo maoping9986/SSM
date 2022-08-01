@@ -7,7 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="mybatis_paramters" />
-        <module name="mybatis-resultMap" />
+        <module name="mybatis_dynamicSQL" />
+        <module name="mybatis_resultMap" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bcm.mapper.DynamicSQL">
+
+<!--
+     if标签可通过test属性的表达式进行判断，
+        若表达式的结果为true，则标签中的内容会执行；反之标签中的内容不会执行
+     where和if一般结合使用：
+       a>若where标签中的if条件都不满足，则where标签没有任何功能，即不会添加where关键字
+       b>若where标签中的if条件满足，则where标签会自动添加where关键字，并将条件最前方多余的and去掉
+       注意：where标签不能去掉条件最后多余的and
+   trim用于去掉或添加标签中的内容
+        常用属性：
+        prefix：在trim标签中的内容的前面添加某些内容
+        prefixOverrides：在trim标签中的内容的前面去掉某些内容
+        suffix：在trim标签中的内容的后面添加某些内容
+        suffixOverrides：在trim标签中的内容的后面去掉某些内容
+    choose、when、 otherwise相当于if...else if..else
+    sql片段，可以记录一段公共sql片段，在使用的地方通过include标签进行引入
+-->
+    <sql id="EmpColumns">
+        emp_id,emp_name,age,gender,dept_id
+    </sql>
+<!--    List<Emp> getEmpByCondition(Emp emp); 
+-->
+    <select id="getEmpByCondition" resultType="Emp">
+        select <include refid="EmpColumns"></include> from tb_emp
+        <trim prefix="where" suffixOverrides="and">
+            <if test="empName != null and empName != ''">
+                emp_name = #{empName} and
+            </if>
+            <if test="age != null and age != ''">
+                age = #{age} and
+            </if>
+            <if test="gender != null and gender != ''">
+               gender = #{gender}
+            </if>
+        </trim>
+
+
+    </select>
+
+    <select id="getEmpByConditionTwo" resultType="Emp">
+        select * from tb_emp
+        <where>
+            <if test="empName != null and empName != ''">
+                emp_name = #{empName}
+            </if>
+            <if test="age != null and age != ''">
+                and  age = #{age}
+            </if>
+            <if test="gender != null and gender != ''">
+                and gender = #{gender}
+            </if>
+        </where>
+
+
+    </select>
+
+    <select id="getEmpByConditionOne" resultType="Emp">
+        select * from tb_emp where 1=1
+        <if test="empName != null and empName != ''">
+            emp_name = #{empName}
+        </if>
+        <if test="age != null and age != ''">
+            and  age = #{age}
+        </if>
+        <if test="gender != null and gender != ''">
+            and gender = #{gender}
+        </if>
+    </select>
+
+<!--        void insertManyEmps(@Param("emps")List<Emp> emps);
+-->
+    <insert id="insertManyEmps" >
+        insert into  tb_emp values
+        <foreach collection="emps" item="emp" separator=",">
+            (null,#{emp.empName},#{emp.age},#{emp.gender},null)
+        </foreach>
+    </insert>
+
+<!--        void deleteManyEmps(@Param("empIds") Integer[] empids);
+-->
+    <delete id="deleteManyEmps">
+        delete from tb_emp where emp_id in
+        <foreach collection="empIds" item="empId" separator="," open="(" close=")">
+            #{empId}
+        </foreach>
+    </delete>
+
+</mapper>
