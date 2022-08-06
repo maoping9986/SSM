@@ -2,6 +2,7 @@ package com.bcm.mapper;
 
 import com.bcm.paramters.User;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Map;
 
@@ -29,5 +30,7 @@ public interface UserMapper {
     int InsertUser(User user);
 
     User CheckLoginParam(@Param("name") String username,@Param("password") String password);
+
+    int updateUser(Map<String,Object> map);
 
 }

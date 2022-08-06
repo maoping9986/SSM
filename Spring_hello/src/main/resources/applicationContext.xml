@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+<!--
+        bean:配置一个bean对象，交给IOC容器来管理
+        id:对象标识符
+        class:指明对象的类型
+  -->
+    <bean id="helloworld" class="com.bcm.spring.entity.Helloworld"></bean>
+
+    <bean id="studentone" class="com.bcm.spring.entity.Student">
+        <property name="sid" value="1001"></property>
+        <property name="sname" value="肖佩奇"></property>
+        <property name="sage" value="23"></property>
+        <property name="gender" value="女"></property>
+    </bean>
+    <bean id="studenttwo" class="com.bcm.spring.entity.Student">
+        <constructor-arg value="1002" ></constructor-arg>
+        <constructor-arg value="Tom" ></constructor-arg>
+        <constructor-arg value="22" ></constructor-arg>
+        <constructor-arg value="男" ></constructor-arg>
+    </bean>
+
+    <bean id="classone" class="com.bcm.spring.entity.Clazz">
+        <property name="cid" value="1201"></property>
+        <property name="cname" value="实验班"></property>
+        <property name="stu" ref="studentlist"></property>
+       <!-- <property name="stu">
+            <list>
+                <ref bean="studentone"></ref>
+                <ref bean="studenttwo"></ref>
+            </list>
+        </property>-->
+    </bean>
+
+<!-- 配置一个集合bean 使用util 约束-->
+    <util:list id="studentlist">
+        <ref bean="studenttwo"></ref>
+        <ref bean="studentone"></ref>
+    </util:list>
+    <util:map id="teachmap">
+        <entry key="12345" value-ref="teacherone"></entry>
+        <entry key="995826" value-ref="teachertwo"></entry>
+    </util:map>
+    <bean id="teacherone" class="com.bcm.spring.entity.Teacher">
+        <property name="name" value="tom"></property>
+        <property name="tid" value="12345"></property>
+    </bean>
+
+    <bean id="teachertwo" class="com.bcm.spring.entity.Teacher">
+        <property name="name" value="jack"></property>
+        <property name="tid" value="995826"></property>
+    </bean>
+
+    <bean id="stu3" class="com.bcm.spring.entity.Student">
+        <property name="sid" value="1003"></property>
+        <property name="sname" value="maop"></property>
+        <property name="sage" value="22"></property>
+        <property name="gender" value="男"></property>
+        <property name="aClass" ref="classone"></property>
+
+        <property name="hobby">
+            <array>
+                <value>跑步</value>
+                <value>羽毛球</value>
+                <value>篮球</value>
+            </array>
+        </property>
+
+        <property name="teacherMap" ref="teachmap"></property>
+
+    </bean>
+</beans>

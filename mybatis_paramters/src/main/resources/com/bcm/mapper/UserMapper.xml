@@ -52,4 +52,8 @@
         SELECT * FROM tb_user
         WHERE username = #{name} AND password = #{password}
     </select>
+
+    <update id="updateUser" parameterType="map">
+        update tb_user set username=#{username} where id = #{id}
+    </update>
 </mapper>

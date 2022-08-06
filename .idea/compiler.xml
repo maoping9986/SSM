@@ -6,9 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="mybatis_paramters" />
-        <module name="mybatis_dynamicSQL" />
         <module name="mybatis_resultMap" />
+        <module name="spring-ioc-annoation" />
+        <module name="Spring_hello" />
+        <module name="mybatis_paramters" />
+        <module name="mybatis_mbg" />
+        <module name="mybatis_dynamicSQL" />
+        <module name="mybatis_cache" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

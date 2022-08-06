@@ -2,6 +2,7 @@
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
 <configuration>
     <!--
 properties?,settings?,typeAliases?,typeHandlers?,
@@ -11,12 +12,12 @@ plugins?,environments?,databaseIdProvider?,mappers?
 
     <properties resource="jdbc.properties"/>
 
-  <!--  <settings>
-        <setting name="logImpl" value="STDOUT_LOGGING"/>
-    </settings>-->
-<!--实体类-->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
     <typeAliases>
-        <package name="com.bcm.paramters"/>
+        <package name="com.bcm.cache.entity"/>
     </typeAliases>
 
     <!-- 配置连接数据库的环境-->
@@ -35,6 +36,6 @@ plugins?,environments?,databaseIdProvider?,mappers?
     <!-- 引入Mybatis映射文件-->
     <!--   mapper接口与映射文件包与名字必须一致-->
     <mappers>
-        <package name="com.bcm.mapper"/>
+        <package name="com.bcm.cache.mapper"/>
     </mappers>
 </configuration>
